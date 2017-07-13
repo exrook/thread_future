@@ -1,0 +1,7 @@
+[package]
+name = "thread_future"
+version = "0.1.0"
+authors = ["Jacob Hughes <j@jacobhughes.me>"]
+
+[dependencies]
+futures = "0.1"
