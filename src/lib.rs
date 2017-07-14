@@ -11,15 +11,32 @@ use futures::{Future,Poll,Async};
 
 #[cfg(test)]
 mod tests {
+    use ::ThreadFuture;
+    use std::thread;
+    use std::time::Duration;
+    use futures::Future;
     #[test]
     fn test_thread_future() {
         let tf = ThreadFuture::new(|| {
-            println!("DOING SOME WORK");
+            // Do some work
             thread::sleep(Duration::from_millis(500));
-            println!("DONE");
             vec![42; 42]
         });
         assert!(tf.wait().unwrap() == vec![42; 42]);
+    }
+    #[test]
+    fn test_panic() {
+        let tf = ThreadFuture::new(|| {
+            panic!("test_1234")
+        });
+        match tf.wait() {
+            Ok(_) => {
+                panic!()
+            }
+            Err(e) => {
+                assert!(&"test_1234" == e.downcast_ref::<&str>().unwrap());
+            }
+        }
     }
 }
 
